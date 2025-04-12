@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nilesh Kuril | Game Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #111827;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+      color: #9ca3af;
+    }
+
+    .section {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 1rem;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .game-image {
+      width: 100%;
+      height: auto;
+    }
+
+    .game-content {
+      padding: 1.5rem;
+    }
+
+    .game-content h2 {
+      margin-bottom: 1rem;
+      color: #111827;
+    }
+
+    .game-content p {
+      margin-bottom: 1rem;
+      color: #4b5563;
+    }
+
+    .game-content a {
+      background-color: #2563eb;
+      color: white;
+      padding: 0.7rem 1.2rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .game-content a:hover {
+      background-color: #1d4ed8;
+    }
+
+    @media (min-width: 768px) {
+      .game-card {
+        flex-direction: row;
+      }
+
+      .game-image {
+        width: 50%;
+        object-fit: cover;
+      }
+
+      .game-content {
+        width: 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Nilesh Jagdish Kuril</h1>
+    <p>Game Developer | Unity 3D | C#</p>
+  </header>
+
+  <section class="section">
+    <div class="game-card">
+      <img src="your-game-screenshot.jpg" alt="Game Screenshot" class="game-image">
+      <div class="game-content">
+        <h2>Imbalance</h2>
+        <p>An addictive puzzle platformer that challenges your reflexes and timing. Optimized for mobile, loved by players on the Play Store!</p>
+        <a href="https://play.google.com/store/apps/details?id=your.game.id" target="_blank">Download on Play Store</a>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
 
