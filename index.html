@@ -2,119 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nilesh Kuril | Game Developer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
+    body, html {
       margin: 0;
       padding: 0;
-      font-family: 'Inter', sans-serif;
-    }
-
-    body {
-      background-color: #f9f9f9;
-      color: #333;
-      line-height: 1.6;
-    }
-
-    header {
-      background-color: #111827;
-      color: white;
-      padding: 2rem 1rem;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://source.unsplash.com/1600x900/?technology,future') no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
       text-align: center;
     }
-
-    header h1 {
-      font-size: 2.5rem;
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
-
-    header p {
-      margin-top: 0.5rem;
-      font-size: 1.2rem;
-      color: #9ca3af;
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+      padding: 20px;
     }
-
-    .section {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 1rem;
+    h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
     }
-
-    .game-card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
+    p {
+      font-size: 20px;
+      margin-bottom: 40px;
+    }
+    .timer {
+      font-size: 30px;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
     }
-
-    .game-image {
-      width: 100%;
-      height: auto;
+    .timer div {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      min-width: 80px;
     }
-
-    .game-content {
-      padding: 1.5rem;
-    }
-
-    .game-content h2 {
-      margin-bottom: 1rem;
-      color: #111827;
-    }
-
-    .game-content p {
-      margin-bottom: 1rem;
-      color: #4b5563;
-    }
-
-    .game-content a {
-      background-color: #2563eb;
-      color: white;
-      padding: 0.7rem 1.2rem;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background-color 0.3s;
-    }
-
-    .game-content a:hover {
-      background-color: #1d4ed8;
-    }
-
-    @media (min-width: 768px) {
-      .game-card {
-        flex-direction: row;
-      }
-
-      .game-image {
-        width: 50%;
-        object-fit: cover;
-      }
-
-      .game-content {
-        width: 50%;
-      }
+    .timer span {
+      display: block;
+      font-size: 16px;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Nilesh Jagdish Kuril</h1>
-    <p>Game Developer | Unity 3D | C#</p>
-  </header>
-
-  <section class="section">
-    <div class="game-card">
-      <img src="your-game-screenshot.jpg" alt="Game Screenshot" class="game-image">
-      <div class="game-content">
-        <h2>Imbalance</h2>
-        <p>An addictive puzzle platformer that challenges your reflexes and timing. Optimized for mobile, loved by players on the Play Store!</p>
-        <a href="https://play.google.com/store/apps/details?id=your.game.id" target="_blank">Download on Play Store</a>
-      </div>
+  <div class="overlay"></div>
+  <div class="content">
+    <h1>Coming Soon</h1>
+    <p>We're working hard to launch our website. Stay tuned!</p>
+    <div class="timer" id="countdown">
+      <div><div id="days">00</div><span>Days</span></div>
+      <div><div id="hours">00</div><span>Hours</span></div>
+      <div><div id="minutes">00</div><span>Minutes</span></div>
+      <div><div id="seconds">00</div><span>Seconds</span></div>
     </div>
-  </section>
+  </div>
+
+  <script>
+    // Set launch date
+    const launchDate = new Date("2025-06-01T00:00:00").getTime();
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = launchDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+      document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+      document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+      document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+
+      // If the countdown is over
+      if (distance < 0) {
+        clearInterval(timer);
+        document.getElementById('countdown').innerHTML = "<p>We're Live!</p>";
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
-
