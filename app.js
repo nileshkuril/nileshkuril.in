@@ -1,7 +1,28 @@
 // Games data
 const gamesData = {
   "games": [
-
+  {
+  title: "Imbalance: Ball Balancing Game",
+  genre: "Adventure",
+  description: "Skillfully maneuver the ball on wooden bridges while avoiding obstacles.",
+  rating: "4.6",
+  downloads: "50K+",
+  features: ["Exciting levels", "Dynamic music", "Offline play"],
+  playStoreUrl: "https://play.google.com/store/apps/details?id=com.PlayPingStudio.HandleTheBall&hl=en_IN",
+  youtubeUrl: "https://youtu.be/edoi_07QPFM",
+  icon: "⚽"
+},
+{
+  title: "Maze and Car : A Puzzle Game",
+  genre: "Puzzle",
+  description: "Drive different cars through 3D mazes, collect diamonds, and reach the exit.",
+  rating: "—",
+  downloads: "1K+",
+  features: ["Realistic controls", "HD graphics", "Less ads"],
+  playStoreUrl: "https://play.google.com/store/apps/details?id=com.playpingstudio.mazeandcar&hl=en_IN",
+  youtubeUrl: "https://youtu.be/w3XXQMvV-nk",
+  icon: "🚗"
+}
   
     {
       "title": "Mystic Quest Adventures",
