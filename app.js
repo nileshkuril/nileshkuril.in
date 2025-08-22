@@ -87,6 +87,69 @@ const gamesData = {
   ]
 };
 
+// Create Watch Trailer button
+const watchBtn = document.createElement('a');
+watchBtn.className = 'btn btn--secondary';
+watchBtn.textContent = 'Watch Trailer';
+watchBtn.href = '#';
+watchBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  openVideoModal(game.youtubeUrl);
+});
+
+// Append it where other buttons go
+buttonsWrap.appendChild(watchBtn);
+
+// For Play Store button, ensure it uses the real link
+const storeBtn = document.createElement('a');
+storeBtn.className = 'btn btn--primary';
+storeBtn.textContent = 'View on Play Store';
+storeBtn.href = game.playStoreUrl;
+storeBtn.target = '_blank';
+storeBtn.rel = 'noopener';
+buttonsWrap.appendChild(storeBtn);
+function openVideoModal(youtubeUrl) {
+  const modal = document.getElementById('videoModal');
+  const frame = document.getElementById('videoFrame');
+  const videoId = toYouTubeEmbed(youtubeUrl);
+  frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+  const modal = document.getElementById('videoModal');
+  const frame = document.getElementById('videoFrame');
+  frame.src = ''; // stop playback
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function toYouTubeEmbed(url) {
+  // Supports full and short links
+  try {
+    const u = new URL(url);
+    if (u.hostname === 'youtu.be') return u.pathname.slice(1);
+    if (u.searchParams.get('v')) return u.searchParams.get('v');
+    // Fallback: try to parse last path segment
+    const parts = u.pathname.split('/');
+    return parts[parts.length - 1] || '';
+  } catch {
+    return url;
+  }
+}
+
+// Close handlers
+document.addEventListener('click', (e) => {
+  if (e.target.matches('[data-close]')) {
+    closeVideoModal();
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeVideoModal();
+});
+
+      
 // DOM Elements
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
