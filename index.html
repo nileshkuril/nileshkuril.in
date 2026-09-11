@@ -15,8 +15,11 @@
     <meta property="og:description" content="Crafting extraordinary 3D mobile gaming experiences. Explore Imbalance: Ball Balancing Game and Maze and Car on Google Play.">
     <meta property="og:image" content="images/handle-ball-screen-1.png">
     
-    <!-- Favicon -->
+    <!-- Favicon & Mobile Web App -->
     <link rel="icon" type="image/png" href="images/handle-the-ball.png">
+    <link rel="apple-touch-icon" href="images/handle-the-ball.png">
+    <meta name="theme-color" content="#080c14">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
 
     <!-- Google Analytics 4 (GA4) -->
@@ -278,6 +281,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Mobile Native Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <a href="#home" class="mobile-nav__item active">
+            <span class="mobile-nav__icon">🏠</span>
+            <span class="mobile-nav__label">Home</span>
+        </a>
+        <a href="#games" class="mobile-nav__item">
+            <span class="mobile-nav__icon">🎮</span>
+            <span class="mobile-nav__label">Games</span>
+        </a>
+        <a href="#skills" class="mobile-nav__item">
+            <span class="mobile-nav__icon">⚙️</span>
+            <span class="mobile-nav__label">Skills</span>
+        </a>
+        <a href="#about" class="mobile-nav__item">
+            <span class="mobile-nav__icon">👤</span>
+            <span class="mobile-nav__label">About</span>
+        </a>
+        <a href="#contact" class="mobile-nav__item">
+            <span class="mobile-nav__icon">✉️</span>
+            <span class="mobile-nav__label">Contact</span>
+        </a>
+    </nav>
 
     <script src="app.js"></script>
 </body>

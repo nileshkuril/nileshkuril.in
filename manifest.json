@@ -1,0 +1,21 @@
+{
+  "name": "PlayPing Studio - Nilesh Kuril Games",
+  "short_name": "PlayPing",
+  "description": "Indie Unity 3D Physics and Puzzle Mobile Games",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080c14",
+  "theme_color": "#080c14",
+  "icons": [
+    {
+      "src": "images/handle-the-ball.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/handle-the-ball.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

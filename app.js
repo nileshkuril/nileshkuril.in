@@ -106,29 +106,37 @@ function createGameCard(game, index) {
         ? `<img src="${game.icon}" alt="${game.title}" style="width: 76px; height: 76px; border-radius: 18px; object-fit: cover; box-shadow: 0 8px 20px rgba(0,0,0,0.35); z-index: 1;">`
         : `<div style="font-size: 50px; z-index: 1;">${game.icon}</div>`;
 
+    const screenshotsHtml = game.screenshots && game.screenshots.length
+        ? `<div class="game-card__screenshots-strip">
+            ${game.screenshots.map(s => `
+                <div class="card-screen-item">
+                    <img src="${s}" alt="${game.title} screenshot" loading="lazy">
+                </div>
+            `).join('')}
+           </div>`
+        : '';
+
     card.innerHTML = `
         <div class="game-card__image" style="background: ${gradients[index % gradients.length]}">
             ${iconHtml}
             <div class="game-card__overlay"></div>
         </div>
         <div class="game-card__content">
-            <h3 class="game-card__title">${game.title}</h3>
-            <div class="game-card__genre">${game.genre}</div>
-            <p class="game-card__description">${game.description}</p>
-            <div class="game-card__stats">
-                <div class="game-stat">
-                    <span class="rating">★ ${game.rating}</span>
-                </div>
-                <div class="game-stat">
-                    <span>${game.downloads} downloads</span>
-                </div>
+            <div class="game-card__header-row">
+                <h3 class="game-card__title">${game.title}</h3>
+                <span class="rating">★ ${game.rating}</span>
             </div>
+            <div class="game-card__genre">${game.genre} &bull; ${game.downloads}</div>
+            <p class="game-card__description">${game.description}</p>
+            
+            ${screenshotsHtml}
+
             <div class="game-card__actions">
                 <button class="btn btn--primary btn--small play-store-btn" data-url="${game.playStoreUrl}">
-                    Play Store
+                    <span style="font-size: 14px; margin-right: 4px;">▶</span> Install on Google Play
                 </button>
                 <button class="btn btn--outline-primary btn--small learn-more-btn" data-game-index="${index}">
-                    Learn More
+                    Details
                 </button>
             </div>
         </div>
@@ -390,19 +398,30 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe elements for animation
-window.addEventListener('load', function() {
-    const animateElements = document.querySelectorAll('.game-card, .feature, .about__description');
-    
-    animateElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+// Active state tracking for bottom navigation
+window.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.mobile-nav__item');
+    const scrollY = window.pageYOffset;
+
+    sections.forEach(current => {
+        const sectionHeight = current.offsetHeight;
+        const sectionTop = current.offsetTop - 120;
+        const sectionId = current.getAttribute('id');
+
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === '#' + sectionId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
     });
 });
 
-// Make functions globally available for any inline handlers (though we're using proper event listeners now)
+// Make functions globally available for any inline handlers
 window.openGameModal = openGameModal;
 window.closeGameModal = closeGameModal;
 window.openPlayStore = openPlayStore;

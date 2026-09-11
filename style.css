@@ -1064,26 +1064,56 @@ select.form-control {
   overflow: hidden;
 }
 
-.game-card__stats {
+.game-card__header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  margin-top: auto;
-  font-size: 11px;
+  gap: 8px;
+  margin-bottom: 2px;
 }
 
-.game-stat {
+.game-card__screenshots-strip {
   display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  font-size: 11px;
-  color: var(--color-text-secondary);
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 10px 0;
+  margin-bottom: 12px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.game-card__screenshots-strip::-webkit-scrollbar {
+  height: 4px;
+}
+
+.game-card__screenshots-strip::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.3);
+  border-radius: 4px;
+}
+
+.card-screen-item {
+  flex: 0 0 120px;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  scroll-snap-align: start;
+  background: #000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-screen-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .rating {
   color: var(--color-warning);
   font-weight: var(--font-weight-semibold);
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 .game-card__actions {
@@ -1551,5 +1581,74 @@ select.form-control {
   .contact__social {
     flex-direction: column;
     align-items: center;
+  }
+
+  body {
+    padding-bottom: 75px; /* Space for bottom nav bar */
+  }
+
+  /* Bottom Navigation for Mobile */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(56, 189, 248, 0.2);
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px;
+    z-index: 999;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .mobile-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+
+  .mobile-nav__icon {
+    font-size: 18px;
+    margin-bottom: 2px;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-nav__item:hover,
+  .mobile-nav__item.active {
+    color: var(--color-primary);
+  }
+
+  .mobile-nav__item.active .mobile-nav__icon {
+    transform: scale(1.15);
+  }
+
+  /* Increase button tap size for mobile thumbs */
+  .play-store-btn {
+    min-height: 44px;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .learn-more-btn {
+    min-height: 44px;
+    font-size: 12px;
+  }
+}
+
+/* Hide mobile bottom nav on desktop screens */
+@media (min-width: 769px) {
+  .mobile-bottom-nav {
+    display: none !important;
   }
 }
