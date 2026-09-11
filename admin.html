@@ -649,7 +649,7 @@
                             <th>Action</th>
                             <th>Game / Context</th>
                             <th>Location</th>
-                            <th>Device & OS</th>
+                            <th>Device & Model Name</th>
                             <th>Traffic Source</th>
                             <th>Time</th>
                         </tr>
@@ -950,10 +950,22 @@
 
                 const flag = ev.flag || "📍";
                 const cityStr = ev.city ? `${flag} ${ev.city}, ${ev.country}` : "Global / Detecting";
-                let deviceStr = (ev.device || "Mobile") + " (" + (ev.os || "Android") + ")";
-                if (ev.deviceModel) {
-                    deviceStr = `<span style="color: #38bdf8; font-weight: 500;">${escapeHtml(ev.deviceModel)}</span> <span style="color: #64748b; font-size: 11px;">(${ev.os || ev.device})</span>`;
-                }
+                
+                // Device Icon
+                const devIcon = (ev.device === "Mobile") ? "📱" : ((ev.device === "Tablet") ? "📟" : "💻");
+                const modelName = ev.deviceModel || (ev.device === "Mobile" ? "Mobile Phone" : (ev.device || "Desktop PC"));
+                const osName = ev.os || "Android";
+
+                const deviceStr = `
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 14px;">${devIcon}</span>
+                        <div>
+                            <div style="color: #38bdf8; font-weight: 600; font-size: 13px;">${escapeHtml(modelName)}</div>
+                            <div style="color: #64748b; font-size: 11px;">${escapeHtml(osName)} • ${escapeHtml(ev.device || "Device")}</div>
+                        </div>
+                    </div>
+                `;
+
                 const sourceStr = ev.referrer || "Direct";
                 const timeAgo = formatTimeAgo(new Date(ev.timestamp));
 
@@ -962,7 +974,7 @@
                         <td>${tag}</td>
                         <td style="font-weight: 500;">${context}</td>
                         <td style="color: #e2e8f0; font-size: 12px;">${cityStr}</td>
-                        <td style="font-size: 12px;">${deviceStr}</td>
+                        <td>${deviceStr}</td>
                         <td style="color: #a855f7; font-size: 12px; font-weight: 500;">${sourceStr}</td>
                         <td style="color: #64748b; font-size: 12px;">${timeAgo}</td>
                     </tr>
