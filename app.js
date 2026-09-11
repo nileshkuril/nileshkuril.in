@@ -103,8 +103,8 @@ function createGameCard(game, index) {
     ];
     
     const iconHtml = isImageUrl(game.icon)
-        ? `<img src="${game.icon}" alt="${game.title}" style="width: 100px; height: 100px; border-radius: 22px; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.35); z-index: 1;">`
-        : `<div style="font-size: 60px; z-index: 1;">${game.icon}</div>`;
+        ? `<img src="${game.icon}" alt="${game.title}" style="width: 76px; height: 76px; border-radius: 18px; object-fit: cover; box-shadow: 0 8px 20px rgba(0,0,0,0.35); z-index: 1;">`
+        : `<div style="font-size: 50px; z-index: 1;">${game.icon}</div>`;
 
     card.innerHTML = `
         <div class="game-card__image" style="background: ${gradients[index % gradients.length]}">

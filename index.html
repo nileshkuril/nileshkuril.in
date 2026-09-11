@@ -52,70 +52,59 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero & Featured Games Section (Above-the-Fold) -->
     <section id="home" class="hero">
         <div class="hero__container container">
             <div class="hero__content">
                 <div class="hero__badge">
-                    <span class="badge__dot"></span> Indie Game Studio & Developer
+                    <span class="badge__dot"></span> PlayPing Studio • Indie Game Dev
                 </div>
-                <h1 class="hero__title">Crafting Extraordinary Mobile Gaming Experiences</h1>
+                <h1 class="hero__title">Mobile 3D Physics & Puzzle Games</h1>
                 <p class="hero__description">
-                    I am a passionate Unity game developer and the creator behind <strong>PlayPing Studio</strong>, dedicated to building engaging, high-quality 3D physics and puzzle games for mobile players worldwide.
+                    Created by <strong>Nilesh Kuril</strong>. Engaging, high-performance Unity games crafted for mobile players worldwide.
                 </p>
-                <div class="hero__actions">
-                    <div class="hero__buttons">
-                        <a href="#games" class="btn btn--primary hero__cta">Explore My Games</a>
-                        <a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer" class="btn btn--outline-primary hero__cta">
-                            Play Store Profile ↗
-                        </a>
+                <div class="hero__stats">
+                    <div class="stat">
+                        <span class="stat__number">50K+</span>
+                        <span class="stat__label">Total Downloads</span>
                     </div>
-                    <div class="hero__stats">
-                        <div class="stat">
-                            <span class="stat__number">50K+</span>
-                            <span class="stat__label">Total Downloads</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat__number">4.8 ★</span>
-                            <span class="stat__label">Average Rating</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat__number">2</span>
-                            <span class="stat__label">Live Titles</span>
-                        </div>
+                    <div class="stat">
+                        <span class="stat__number">4.8 ★</span>
+                        <span class="stat__label">Average Rating</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat__number">2</span>
+                        <span class="stat__label">Published Games</span>
                     </div>
                 </div>
-            </div>
-            <div class="hero__visual">
-                <div class="hero__game-icons">
-                    <div class="game-icon" title="Ball Balancing & Physics">⚽</div>
-                    <div class="game-icon" title="Vehicle Labyrinth Adventure">🚗</div>
-                    <div class="game-icon" title="Brain Puzzle Games">🧩</div>
-                    <div class="game-icon" title="Unity 3D Mobile Games">🎮</div>
+                <div class="hero__buttons">
+                    <a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer" class="btn btn--primary hero__cta">
+                        View Play Store Profile ↗
+                    </a>
+                    <a href="#about" class="btn btn--outline-primary hero__cta">
+                        About Studio
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Featured Games Section -->
-    <section id="games" class="games">
-        <div class="container">
-            <div class="section__header">
-                <h2 class="section__title">My Featured Games</h2>
-                <p class="section__subtitle">Explore 3D mobile games created by PlayPing Studio, available now on Google Play</p>
-            </div>
-            <div class="games__grid" id="gamesGrid">
-                <!-- Games will be populated by JavaScript -->
-            </div>
-            
-            <div class="games__developer-cta">
-                <div class="dev-cta__content">
-                    <h3>Explore PlayPing Studio on Google Play</h3>
-                    <p>Discover current updates, new level packs, and upcoming game launches.</p>
+            <!-- Featured Projects Displayed Immediately at Top -->
+            <div class="hero__projects" id="games">
+                <div class="hero__projects-header">
+                    <span class="projects-badge">⚡ Featured Projects</span>
+                    <span class="projects-sub">Available on Google Play</span>
                 </div>
-                <a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
-                    View Google Play Catalog ↗
-                </a>
+                <div class="games__grid" id="gamesGrid">
+                    <!-- Games populated by JavaScript -->
+                </div>
+                <div class="games__developer-cta">
+                    <div class="dev-cta__content">
+                        <h3>More Titles in Development</h3>
+                        <p>Explore latest updates, level packs & upcoming titles on Google Play.</p>
+                    </div>
+                    <a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--small">
+                        Google Play Catalog ↗
+                    </a>
+                </div>
             </div>
         </div>
     </section>
