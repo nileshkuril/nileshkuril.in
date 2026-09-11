@@ -18,7 +18,7 @@ const gamesData = {
         "images/handle-ball-screen-2.png",
         "images/handle-ball-screen-3.png"
       ],
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.PlayPingStudio.HandleTheBall&hl=en_IN",
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.PlayPingStudio.HandleTheBall&hl=en_IN&referrer=utm_source%3Dportfolio_website%26utm_medium%3Ddirect_click%26utm_campaign%3Dimbalance_web",
       "icon": "images/handle-the-ball.png"
     },
     {
@@ -38,7 +38,7 @@ const gamesData = {
         "images/maze-car-screen-2.png",
         "images/maze-car-screen-3.png"
       ],
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.playpingstudio.mazeandcar&hl=en_IN",
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.playpingstudio.mazeandcar&hl=en_IN&referrer=utm_source%3Dportfolio_website%26utm_medium%3Ddirect_click%26utm_campaign%3Dmaze_web",
       "icon": "images/maze-and-car.png"
     }
   ]
