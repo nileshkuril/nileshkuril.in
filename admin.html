@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Analytics Admin - Nilesh Kuril Games</title>
+    <link rel="icon" type="image/png" href="images/handle-the-ball.png">
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js CDN for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #060910;
+            color: #f8fafc;
+            min-height: 100vh;
+            font-family: var(--font-family-base, system-ui, sans-serif);
+        }
+
+        /* Lock Screen */
+        .lock-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: radial-gradient(circle at center, #0f172a 0%, #060910 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lock-box {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.15);
+            border-radius: 20px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .lock-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .lock-subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 24px;
+        }
+
+        .pin-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 20px;
+            letter-spacing: 6px;
+            text-align: center;
+            background: #090d16;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #38bdf8;
+            outline: none;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .pin-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+        }
+
+        .lock-btn {
+            width: 100%;
+            padding: 14px;
+            background: #38bdf8;
+            color: #060910;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lock-btn:hover {
+            background: #0ea5e9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+        }
+
+        .lock-error {
+            color: #f87171;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        /* Admin Navbar */
+        .admin-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-nav__container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-brand h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .admin-badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .admin-btn--outline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+        }
+
+        .admin-btn--outline:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-btn--primary {
+            background: #38bdf8;
+            color: #060910;
+            border: none;
+        }
+
+        .admin-btn--primary:hover {
+            background: #0ea5e9;
+        }
+
+        /* Dashboard Container */
+        .dashboard {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dashboard-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            color: #fff;
+        }
+
+        .dashboard-header p {
+            color: #94a3b8;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-box {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .stat-box:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-box__icon {
+            font-size: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-box__label {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .stat-box__value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .stat-box__sub {
+            font-size: 12px;
+            color: #34d399;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Section Cards */
+        .dash-card {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .dash-card__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .dash-card__title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+        }
+
+        /* Games Performance Cards */
+        .games-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .game-perf-card {
+            background: #090d16;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .game-perf-card img {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-perf-info {
+            flex: 1;
+        }
+
+        .game-perf-info h4 {
+            font-size: 15px;
+            color: #fff;
+            margin: 0 0 6px 0;
+        }
+
+        .game-perf-metrics {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-item .num {
+            font-size: 18px;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .metric-item .desc {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        /* Charts Section */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 900px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 280px;
+        }
+
+        /* Live Activity Table */
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .activity-table th {
+            text-align: left;
+            padding: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .activity-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #f1f5f9;
+        }
+
+        .action-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .action-tag--click {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .action-tag--view {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .action-tag--modal {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        /* Settings Modal */
+        .modal-config {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-config.active {
+            display: flex;
+        }
+
+        .config-card {
+            background: #0f172a;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .config-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: #060910;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Lock Screen -->
+    <div id="lockScreen" class="lock-screen">
+        <div class="lock-box">
+            <div class="lock-icon">🔒</div>
+            <h2 class="lock-title">Studio Admin Access</h2>
+            <p class="lock-subtitle">Enter your secret PIN to access the live analytics and traffic dashboard.</p>
+            <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="8" autofocus>
+            <button id="unlockBtn" class="lock-btn">Unlock Dashboard</button>
+            <div id="lockError" class="lock-error">Incorrect PIN. Please try again.</div>
+            <p style="font-size: 11px; color: #64748b; margin-top: 18px;">Default PIN is <strong>2026</strong> (can be changed in Settings).</p>
+        </div>
+    </div>
+
+    <!-- Admin Nav -->
+    <nav class="admin-nav">
+        <div class="admin-nav__container">
+            <div class="admin-brand">
+                <h1>Nilesh Kuril Games</h1>
+                <span class="admin-badge">Admin Studio</span>
+            </div>
+            <div class="admin-actions">
+                <a href="index.html" class="admin-btn admin-btn--outline" target="_blank">View Live Site ↗</a>
+                <button id="configBtn" class="admin-btn admin-btn--outline">⚙️ Setup & GA4</button>
+                <button id="lockBtn" class="admin-btn admin-btn--outline">🔒 Lock</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+        <div class="dashboard-header">
+            <div>
+                <h2>Analytics & Player Engagement</h2>
+                <p>Real-time metrics for website visits and Google Play Store conversions</p>
+            </div>
+            <div>
+                <button id="refreshBtn" class="admin-btn admin-btn--outline">↻ Refresh Stats</button>
+            </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-box__icon">👥</div>
+                <div class="stat-box__label">Total Page Views</div>
+                <div class="stat-box__value" id="kpiTotalViews">0</div>
+                <div class="stat-box__sub"><span>▲</span> Live website traffic</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box__icon">⚡</div>
+                <div class="stat-box__label">Today's Visits</div>
+                <div class="stat-box__value" id="kpiTodayViews">0</div>
+                <div class="stat-box__sub">Unique visitor sessions</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box__icon">🎯</div>
+                <div class="stat-box__label">Game Link Clicks</div>
+                <div class="stat-box__value" id="kpiTotalClicks">0</div>
+                <div class="stat-box__sub">Google Play Store clicks</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box__icon">📈</div>
+                <div class="stat-box__label">Click-Through Rate</div>
+                <div class="stat-box__value" id="kpiConversionRate">0%</div>
+                <div class="stat-box__sub">Visitor to download ratio</div>
+            </div>
+        </div>
+
+        <!-- Games Performance Section -->
+        <div class="dash-card">
+            <div class="dash-card__header">
+                <h3 class="dash-card__title">Game Store Clicks Breakdown</h3>
+                <span style="font-size: 12px; color: #94a3b8;">Individual Play Store performance</span>
+            </div>
+            <div class="games-breakdown">
+                <!-- Imbalance Card -->
+                <div class="game-perf-card">
+                    <img src="images/handle-the-ball.png" alt="Imbalance">
+                    <div class="game-perf-info">
+                        <h4>Imbalance: Ball Balancing Game</h4>
+                        <div class="game-perf-metrics">
+                            <div class="metric-item">
+                                <span class="num" id="imbalanceClicks">0</span>
+                                <span class="desc">Store Clicks</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="num" id="imbalanceModals">0</span>
+                                <span class="desc">Modal Opens</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="num" id="imbalanceCTR">0%</span>
+                                <span class="desc">CTR</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maze and Car Card -->
+                <div class="game-perf-card">
+                    <img src="images/maze-and-car.png" alt="Maze and Car">
+                    <div class="game-perf-info">
+                        <h4>Maze and Car : A Puzzle Game</h4>
+                        <div class="game-perf-metrics">
+                            <div class="metric-item">
+                                <span class="num" id="mazeClicks">0</span>
+                                <span class="desc">Store Clicks</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="num" id="mazeModals">0</span>
+                                <span class="desc">Modal Opens</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="num" id="mazeCTR">0%</span>
+                                <span class="desc">CTR</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-row">
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <h3 class="dash-card__title">7-Day Traffic & Conversion Trend</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="trafficChart"></canvas>
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <h3 class="dash-card__title">Devices Used</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="deviceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="dash-card">
+            <div class="dash-card__header">
+                <h3 class="dash-card__title">Recent Visitor Activity Feed</h3>
+                <span style="font-size: 12px; color: #94a3b8;">Latest player interactions</span>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Game / Context</th>
+                            <th>Device & OS</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityTableBody">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px;">No events recorded yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="configModal" class="modal-config">
+        <div class="config-card">
+            <h3 style="margin-top: 0; color: #fff; margin-bottom: 8px;">Analytics & Access Settings</h3>
+            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 20px;">Configure Google Analytics 4 ID or change your admin PIN.</p>
+            
+            <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px;">Google Analytics 4 Measurement ID</label>
+            <input type="text" id="gaIdInput" class="config-input" placeholder="G-XXXXXXXXXX">
+
+            <label style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px;">Change Admin PIN</label>
+            <input type="password" id="newPinInput" class="config-input" placeholder="Enter new PIN (e.g. 2026)">
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                <button id="closeConfigBtn" class="admin-btn admin-btn--outline">Cancel</button>
+                <button id="saveConfigBtn" class="admin-btn admin-btn--primary">Save Settings</button>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 24px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: #94a3b8;">Clear demo data & reset stats:</span>
+                <button id="clearDataBtn" class="admin-btn admin-btn--outline" style="color: #f87171;">Reset Stats</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="analytics.js"></script>
+    <script>
+        let trafficChartInstance = null;
+        let deviceChartInstance = null;
+
+        function getStoredPin() {
+            return localStorage.getItem("studio_admin_pin") || "2026";
+        }
+
+        // Check authentication session
+        if (sessionStorage.getItem("admin_authenticated") === "true") {
+            document.getElementById("lockScreen").style.display = "none";
+            initDashboard();
+        }
+
+        // Unlock handling
+        document.getElementById("unlockBtn").addEventListener("click", handleUnlock);
+        document.getElementById("pinInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") handleUnlock();
+        });
+
+        function handleUnlock() {
+            const pin = document.getElementById("pinInput").value;
+            if (pin === getStoredPin()) {
+                sessionStorage.setItem("admin_authenticated", "true");
+                document.getElementById("lockScreen").style.display = "none";
+                initDashboard();
+            } else {
+                document.getElementById("lockError").style.display = "block";
+            }
+        }
+
+        // Lock button
+        document.getElementById("lockBtn").addEventListener("click", function() {
+            sessionStorage.removeItem("admin_authenticated");
+            document.getElementById("lockScreen").style.display = "flex";
+            document.getElementById("pinInput").value = "";
+            document.getElementById("lockError").style.display = "none";
+        });
+
+        // Refresh button
+        document.getElementById("refreshBtn").addEventListener("click", function() {
+            initDashboard();
+        });
+
+        // Config Modal
+        document.getElementById("configBtn").addEventListener("click", function() {
+            document.getElementById("gaIdInput").value = localStorage.getItem("studio_ga_id") || "";
+            document.getElementById("configModal").classList.add("active");
+        });
+
+        document.getElementById("closeConfigBtn").addEventListener("click", function() {
+            document.getElementById("configModal").classList.remove("active");
+        });
+
+        document.getElementById("saveConfigBtn").addEventListener("click", function() {
+            const gaId = document.getElementById("gaIdInput").value.trim();
+            const newPin = document.getElementById("newPinInput").value.trim();
+            if (gaId) localStorage.setItem("studio_ga_id", gaId);
+            if (newPin) localStorage.setItem("studio_admin_pin", newPin);
+            alert("Settings saved successfully!");
+            document.getElementById("configModal").classList.remove("active");
+        });
+
+        document.getElementById("clearDataBtn").addEventListener("click", function() {
+            if (confirm("Are you sure you want to reset all tracking data?")) {
+                localStorage.removeItem("studio_analytics_events");
+                localStorage.removeItem("studio_analytics_aggregated");
+                location.reload();
+            }
+        });
+
+        // Initialize dashboard metrics & charts
+        function initDashboard() {
+            if (window.StudioAnalytics) {
+                window.StudioAnalytics.seedDemoDataIfEmpty();
+            }
+
+            const agg = window.StudioAnalytics ? window.StudioAnalytics.getAggregatedStats() : null;
+            const events = window.StudioAnalytics ? window.StudioAnalytics.getRecentEvents() : [];
+
+            if (!agg) return;
+
+            const totalViews = agg.totalViews || 0;
+            const todayKey = new Date().toISOString().split("T")[0];
+            const todayViews = (agg.dailyViews && agg.dailyViews[todayKey]) || 0;
+
+            const imbalanceClicks = (agg.gameClicks && agg.gameClicks["Imbalance: Ball Balancing Game"]) || 0;
+            const mazeClicks = (agg.gameClicks && agg.gameClicks["Maze and Car : A Puzzle Game"]) || 0;
+            const totalClicks = imbalanceClicks + mazeClicks;
+
+            const imbalanceModals = (agg.gameModals && agg.gameModals["Imbalance: Ball Balancing Game"]) || 0;
+            const mazeModals = (agg.gameModals && agg.gameModals["Maze and Car : A Puzzle Game"]) || 0;
+
+            const ctr = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : 0;
+            const imbCTR = imbalanceModals > 0 ? ((imbalanceClicks / imbalanceModals) * 100).toFixed(1) : 0;
+            const mazeCTR = mazeModals > 0 ? ((mazeClicks / mazeModals) * 100).toFixed(1) : 0;
+
+            // Render KPI cards
+            document.getElementById("kpiTotalViews").textContent = totalViews.toLocaleString();
+            document.getElementById("kpiTodayViews").textContent = todayViews.toLocaleString();
+            document.getElementById("kpiTotalClicks").textContent = totalClicks.toLocaleString();
+            document.getElementById("kpiConversionRate").textContent = ctr + "%";
+
+            // Render Game breakdown
+            document.getElementById("imbalanceClicks").textContent = imbalanceClicks;
+            document.getElementById("imbalanceModals").textContent = imbalanceModals;
+            document.getElementById("imbalanceCTR").textContent = imbCTR + "%";
+
+            document.getElementById("mazeClicks").textContent = mazeClicks;
+            document.getElementById("mazeModals").textContent = mazeModals;
+            document.getElementById("mazeCTR").textContent = mazeCTR + "%";
+
+            renderCharts(agg);
+            renderActivityTable(events);
+        }
+
+        function renderCharts(agg) {
+            const labels = [];
+            const viewsData = [];
+            const now = Date.now();
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(now - i * 86400000);
+                const key = d.toISOString().split("T")[0];
+                const dayName = d.toLocaleDateString("en-US", { weekday: "short" });
+                labels.push(dayName);
+                viewsData.push((agg.dailyViews && agg.dailyViews[key]) || 0);
+            }
+
+            if (trafficChartInstance) trafficChartInstance.destroy();
+            if (deviceChartInstance) deviceChartInstance.destroy();
+
+            // Traffic Chart
+            const ctx1 = document.getElementById("trafficChart").getContext("2d");
+            trafficChartInstance = new Chart(ctx1, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Page Views",
+                        data: viewsData,
+                        borderColor: "#38bdf8",
+                        backgroundColor: "rgba(56, 189, 248, 0.1)",
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: "#38bdf8"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: "rgba(255, 255, 255, 0.05)" },
+                            ticks: { color: "#94a3b8", precision: 0 }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: "#94a3b8" }
+                        }
+                    }
+                }
+            });
+
+            // Devices Chart
+            const ctx2 = document.getElementById("deviceChart").getContext("2d");
+            const mobile = (agg.deviceCounts && agg.deviceCounts.Mobile) || 0;
+            const desktop = (agg.deviceCounts && agg.deviceCounts.Desktop) || 0;
+            const tablet = (agg.deviceCounts && agg.deviceCounts.Tablet) || 0;
+
+            deviceChartInstance = new Chart(ctx2, {
+                type: "doughnut",
+                data: {
+                    labels: ["Mobile", "Desktop", "Tablet"],
+                    datasets: [{
+                        data: [mobile, desktop, tablet],
+                        backgroundColor: ["#38bdf8", "#8b5cf6", "#34d399"],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: { color: "#94a3b8", font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderActivityTable(events) {
+            const tbody = document.getElementById("activityTableBody");
+            if (!events || events.length === 0) {
+                tbody.innerHTML = "<tr><td colspan=\"4\" style=\"text-align:center; color:#94a3b8;\">No activity recorded yet.</td></tr>";
+                return;
+            }
+
+            tbody.innerHTML = events.slice(0, 15).map(ev => {
+                let tag = "";
+                let context = "-";
+
+                if (ev.type === "page_view") {
+                    tag = "<span class=\"action-tag action-tag--view\">Page View</span>";
+                    context = "Homepage / Portfolio";
+                } else if (ev.type === "play_store_click") {
+                    tag = "<span class=\"action-tag action-tag--click\">Play Store Click</span>";
+                    context = ev.game || "Game Download";
+                } else if (ev.type === "game_modal_view") {
+                    tag = "<span class=\"action-tag action-tag--modal\">Modal View</span>";
+                    context = ev.game || "Details preview";
+                } else if (ev.type === "dev_catalog_click") {
+                    tag = "<span class=\"action-tag action-tag--click\">Developer Page</span>";
+                    context = "PlayPing Catalog";
+                }
+
+                const deviceStr = (ev.device || "Mobile") + " (" + (ev.os || "Android") + ")";
+                const timeAgo = formatTimeAgo(new Date(ev.timestamp));
+
+                return `
+                    <tr>
+                        <td>${tag}</td>
+                        <td style="font-weight: 500;">${context}</td>
+                        <td style="color: #94a3b8;">${deviceStr}</td>
+                        <td style="color: #64748b; font-size: 12px;">${timeAgo}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function formatTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return "Just now";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + "m ago";
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + "h ago";
+            const days = Math.floor(hours / 24);
+            return days + "d ago";
+        }
+    </script>
+</body>
+</html>

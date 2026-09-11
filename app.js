@@ -2,64 +2,44 @@
 const gamesData = {
   "games": [
     {
-      "title": "Mystic Quest Adventures",
-      "genre": "RPG/Adventure",
-      "description": "Embark on an epic journey through mystical realms filled with magic, monsters, and treasure.",
-      "rating": "4.7",
-      "downloads": "500K+",
-      "features": ["Epic storyline", "Stunning graphics", "Multiplayer battles"],
-      "playStoreUrl": "#",
-      "icon": "🏰"
-    },
-    {
-      "title": "Puzzle Master Pro",
-      "genre": "Puzzle/Strategy", 
-      "description": "Challenge your mind with hundreds of intricate puzzles and brain teasers.",
-      "rating": "4.5",
-      "downloads": "1M+",
-      "features": ["1000+ levels", "Daily challenges", "Offline play"],
-      "playStoreUrl": "#",
-      "icon": "🧩"
-    },
-    {
-      "title": "Space Defender Elite",
-      "genre": "Action/Arcade",
-      "description": "Defend Earth from alien invasion in this fast-paced space shooter.",
-      "rating": "4.3",
-      "downloads": "750K+",
-      "features": ["Intense action", "Weapon upgrades", "Boss battles"],
-      "playStoreUrl": "#",
-      "icon": "🚀"
-    },
-    {
-      "title": "City Builder Tycoon",
-      "genre": "Simulation/Strategy",
-      "description": "Build and manage your dream city in this comprehensive city building game.",
+      "title": "Imbalance: Ball Balancing Game",
+      "genre": "Physics / Balance / 3D Adventure",
+      "description": "Skillfully maneuver your ball on wooden bridges and curved roads while avoiding obstacles and animated enemies in this extreme balancer 3D challenge.",
       "rating": "4.6",
-      "downloads": "2M+",
-      "features": ["City planning", "Resource management", "Economic simulation"],
-      "playStoreUrl": "#",
-      "icon": "🏙️"
+      "downloads": "50K+",
+      "features": [
+        "Challenging 3D balance physics & unique obstacle paths",
+        "Exciting scenic bridges and floating ocean road levels",
+        "Smooth & precise 4-button intuitive ball movement",
+        "Offline play supported with no time limits"
+      ],
+      "screenshots": [
+        "images/handle-ball-screen-1.png",
+        "images/handle-ball-screen-2.png",
+        "images/handle-ball-screen-3.png"
+      ],
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.PlayPingStudio.HandleTheBall&hl=en_IN",
+      "icon": "images/handle-the-ball.png"
     },
     {
-      "title": "Racing Championship",
-      "genre": "Racing/Sports",
-      "description": "Experience high-speed racing with realistic physics and stunning tracks.",
-      "rating": "4.4", 
-      "downloads": "1.5M+",
-      "features": ["Realistic physics", "Multiple tracks", "Car customization"],
-      "playStoreUrl": "#",
-      "icon": "🏎️"
-    },
-    {
-      "title": "Word Wizard Challenge",
-      "genre": "Word/Educational",
-      "description": "Expand your vocabulary while having fun with creative word challenges.",
-      "rating": "4.8",
-      "downloads": "300K+", 
-      "features": ["Educational gameplay", "Vocabulary building", "Multiple languages"],
-      "playStoreUrl": "#",
-      "icon": "📚"
+      "title": "Maze and Car : A Puzzle Game",
+      "genre": "Brain Puzzle / Labyrinth / 3D Driving",
+      "description": "Drive monster trucks, buggies, and futuristic cars through intricate 3D labyrinths. Collect diamonds, unlock doors, and solve challenging maze puzzles.",
+      "rating": "4.9",
+      "downloads": "1K+",
+      "features": [
+        "120+ exciting, brain-teasing maze and puzzle levels",
+        "Realistic car driving mechanics with smooth controls",
+        "Multiple unlockable vehicles including monster trucks & buggies",
+        "Vibrant colorful 3D graphics with offline play"
+      ],
+      "screenshots": [
+        "images/maze-car-screen-1.png",
+        "images/maze-car-screen-2.png",
+        "images/maze-car-screen-3.png"
+      ],
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.playpingstudio.mazeandcar&hl=en_IN",
+      "icon": "images/maze-and-car.png"
     }
   ]
 };
@@ -97,6 +77,18 @@ function renderGames() {
     });
 }
 
+// Helper to check if icon string is an image URL or path
+function isImageUrl(val) {
+    return typeof val === 'string' && (
+        val.startsWith('http://') ||
+        val.startsWith('https://') ||
+        val.startsWith('images/') ||
+        val.startsWith('./') ||
+        val.startsWith('/') ||
+        /\.(png|jpg|jpeg|webp|svg|gif)$/i.test(val)
+    );
+}
+
 // Create individual game card
 function createGameCard(game, index) {
     const card = document.createElement('div');
@@ -104,17 +96,19 @@ function createGameCard(game, index) {
     
     // Generate gradient based on index
     const gradients = [
-        'linear-gradient(135deg, #3B82F6, #8B5CF6)',
-        'linear-gradient(135deg, #F59E0B, #EF4444)',
-        'linear-gradient(135deg, #10B981, #06B6D4)',
-        'linear-gradient(135deg, #EF4444, #EC4899)',
-        'linear-gradient(135deg, #8B5CF6, #3B82F6)',
-        'linear-gradient(135deg, #F97316, #EF4444)'
+        'linear-gradient(135deg, #1e3a8a, #3b82f6)',
+        'linear-gradient(135deg, #065f46, #10b981)',
+        'linear-gradient(135deg, #831843, #ec4899)',
+        'linear-gradient(135deg, #7c2d12, #f97316)'
     ];
     
+    const iconHtml = isImageUrl(game.icon)
+        ? `<img src="${game.icon}" alt="${game.title}" style="width: 100px; height: 100px; border-radius: 22px; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.35); z-index: 1;">`
+        : `<div style="font-size: 60px; z-index: 1;">${game.icon}</div>`;
+
     card.innerHTML = `
         <div class="game-card__image" style="background: ${gradients[index % gradients.length]}">
-            <div style="font-size: 60px;">${game.icon}</div>
+            ${iconHtml}
             <div class="game-card__overlay"></div>
         </div>
         <div class="game-card__content">
@@ -148,6 +142,9 @@ function createGameCard(game, index) {
     playStoreBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
+        if (window.StudioAnalytics) {
+            window.StudioAnalytics.trackGameClick(game.title, game.playStoreUrl);
+        }
         openPlayStore(game.playStoreUrl);
     });
     
@@ -155,6 +152,9 @@ function createGameCard(game, index) {
     learnMoreBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
+        if (window.StudioAnalytics) {
+            window.StudioAnalytics.trackModalView(game.title);
+        }
         openGameModal(game);
     });
     
@@ -162,6 +162,9 @@ function createGameCard(game, index) {
     card.addEventListener('click', function(e) {
         // Only open modal if click is not on a button
         if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
+            if (window.StudioAnalytics) {
+                window.StudioAnalytics.trackModalView(game.title);
+            }
             openGameModal(game);
         }
     });
@@ -173,10 +176,14 @@ function createGameCard(game, index) {
 function openGameModal(game) {
     if (!gameModal || !modalBody) return;
     
+    const modalIconHtml = isImageUrl(game.icon)
+        ? `<img src="${game.icon}" alt="${game.title}" style="width: 80px; height: 80px; border-radius: 18px; object-fit: cover; box-shadow: 0 6px 18px rgba(0,0,0,0.25);">`
+        : `<div style="font-size: 40px;">${game.icon}</div>`;
+
     modalBody.innerHTML = `
         <div class="modal-game-header">
-            <div class="modal-game-icon" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6); width: 80px; height: 80px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 24px;">
-                ${game.icon}
+            <div class="modal-game-icon" style="margin-bottom: 18px; display: inline-flex;">
+                ${modalIconHtml}
             </div>
             <h2 style="margin-bottom: 8px; color: var(--color-text);">${game.title}</h2>
             <div style="color: var(--color-primary); font-weight: 500; margin-bottom: 16px;">${game.genre}</div>
@@ -197,6 +204,20 @@ function openGameModal(game) {
             <h3 style="margin-bottom: 12px; color: var(--color-text);">About This Game</h3>
             <p style="color: var(--color-text-secondary); line-height: 1.6;">${game.description}</p>
         </div>
+
+        ${game.screenshots && game.screenshots.length ? `
+        <div class="modal-game-gallery" style="margin-bottom: 24px;">
+            <h3 style="margin-bottom: 12px; color: var(--color-text);">Gameplay Gallery</h3>
+            <div class="modal-gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                ${game.screenshots.map(src => `
+                    <a href="${src}" target="_blank" rel="noopener noreferrer" class="gallery-thumb" title="Click to view full image" style="display: block; border-radius: 10px; overflow: hidden; border: 1px solid var(--color-border); aspect-ratio: 16/9; background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.35); transition: transform 0.2s ease, border-color 0.2s ease;">
+                        <img src="${src}" alt="${game.title} Gameplay" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    </a>
+                `).join('')}
+            </div>
+            <div style="font-size: 11px; color: var(--color-text-secondary); margin-top: 6px;">Click any screenshot to view full resolution</div>
+        </div>
+        ` : ''}
         
         <div class="modal-game-features" style="margin-bottom: 32px;">
             <h3 style="margin-bottom: 16px; color: var(--color-text);">Key Features</h3>
@@ -226,6 +247,9 @@ function openGameModal(game) {
     
     if (modalPlayStoreBtn) {
         modalPlayStoreBtn.addEventListener('click', function() {
+            if (window.StudioAnalytics) {
+                window.StudioAnalytics.trackGameClick(game.title, game.playStoreUrl);
+            }
             openPlayStore(game.playStoreUrl);
         });
     }
@@ -246,10 +270,11 @@ function closeGameModal() {
     document.body.style.overflow = '';
 }
 
-// Open Play Store (simulated)
+// Open Play Store
 function openPlayStore(url) {
-    // In a real implementation, this would open the actual Play Store URL
-    alert('This would redirect to the Google Play Store for this game!');
+    if (url && url !== '#') {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    }
 }
 
 // Setup modal event listeners
@@ -327,10 +352,12 @@ function setupSmoothScrolling() {
 window.addEventListener('scroll', function() {
     const header = document.querySelector('.header');
     if (header) {
-        if (window.scrollY > 100) {
-            header.style.background = 'rgba(31, 33, 33, 0.98)';
+        if (window.scrollY > 60) {
+            header.style.background = 'rgba(9, 13, 22, 0.95)';
+            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.4)';
         } else {
-            header.style.background = 'rgba(31, 33, 33, 0.95)';
+            header.style.background = 'rgba(9, 13, 22, 0.8)';
+            header.style.boxShadow = 'none';
         }
     }
 });

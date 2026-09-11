@@ -3,19 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilesh Kuril - Mobile Game Developer</title>
+    <title>Nilesh Kuril - Mobile Game Developer | PlayPing Studio</title>
+    <meta name="description" content="Nilesh Kuril – Indie Unity Game Developer and Founder of PlayPing Studio. Creator of 3D mobile games including Imbalance: Ball Balancing Game and Maze and Car.">
+    <meta name="keywords" content="Nilesh Kuril, PlayPing Studio, Unity Game Developer, Mobile Games, Google Play, Ball Balancing Game, Maze and Car, Indie Dev">
+    <meta name="author" content="Nilesh Kuril">
+    
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.nileshkuril.in/">
+    <meta property="og:title" content="Nilesh Kuril - Mobile Game Developer | PlayPing Studio">
+    <meta property="og:description" content="Crafting extraordinary 3D mobile gaming experiences. Explore Imbalance: Ball Balancing Game and Maze and Car on Google Play.">
+    <meta property="og:image" content="images/handle-ball-screen-1.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/handle-the-ball.png">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google Analytics 4 (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-152BQQBX20"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-152BQQBX20');
+    </script>
+    <!-- Studio Analytics Engine -->
+    <script src="analytics.js"></script>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <nav class="nav container">
             <div class="nav__brand">
-                <h2>Nilesh Kuril Games</h2>
+                <h2>Nilesh Kuril <span class="nav__tag">| PlayPing Studio</span></h2>
             </div>
             <ul class="nav__menu" id="navMenu">
                 <li class="nav__item"><a href="#home" class="nav__link">Home</a></li>
                 <li class="nav__item"><a href="#games" class="nav__link">Games</a></li>
+                <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
                 <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
                 <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
             </ul>
@@ -31,28 +56,42 @@
     <section id="home" class="hero">
         <div class="hero__container container">
             <div class="hero__content">
+                <div class="hero__badge">
+                    <span class="badge__dot"></span> Indie Game Studio & Developer
+                </div>
                 <h1 class="hero__title">Crafting Extraordinary Mobile Gaming Experiences</h1>
-                <p class="hero__description">I am passionate unity game developer dedicated to creating engaging, high-quality gaming experiences for players worldwide.</p>
+                <p class="hero__description">
+                    I am a passionate Unity game developer and the creator behind <strong>PlayPing Studio</strong>, dedicated to building engaging, high-quality 3D physics and puzzle games for mobile players worldwide.
+                </p>
                 <div class="hero__actions">
-                    <a href="#games" class="btn btn--primary hero__cta">Explore Our Games</a>
+                    <div class="hero__buttons">
+                        <a href="#games" class="btn btn--primary hero__cta">Explore My Games</a>
+                        <a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer" class="btn btn--outline-primary hero__cta">
+                            Play Store Profile ↗
+                        </a>
+                    </div>
                     <div class="hero__stats">
                         <div class="stat">
-                            <span class="stat__number">1L+</span>
+                            <span class="stat__number">50K+</span>
                             <span class="stat__label">Total Downloads</span>
                         </div>
                         <div class="stat">
-                            <span class="stat__number">4.6</span>
+                            <span class="stat__number">4.8 ★</span>
                             <span class="stat__label">Average Rating</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat__number">2</span>
+                            <span class="stat__label">Live Titles</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="hero__visual">
                 <div class="hero__game-icons">
-                    <div class="game-icon">🎮</div>
-                    <div class="game-icon">🏰</div>
-                    <div class="game-icon">🚀</div>
-                    <div class="game-icon">🧩</div>
+                    <div class="game-icon" title="Ball Balancing & Physics">⚽</div>
+                    <div class="game-icon" title="Vehicle Labyrinth Adventure">🚗</div>
+                    <div class="game-icon" title="Brain Puzzle Games">🧩</div>
+                    <div class="game-icon" title="Unity 3D Mobile Games">🎮</div>
                 </div>
             </div>
         </div>
@@ -63,10 +102,76 @@
         <div class="container">
             <div class="section__header">
                 <h2 class="section__title">My Featured Games</h2>
-                <p class="section__subtitle">Discover my collection of engaging mobile games available on Google Play Store</p>
+                <p class="section__subtitle">Explore 3D mobile games created by PlayPing Studio, available now on Google Play</p>
             </div>
             <div class="games__grid" id="gamesGrid">
                 <!-- Games will be populated by JavaScript -->
+            </div>
+            
+            <div class="games__developer-cta">
+                <div class="dev-cta__content">
+                    <h3>Explore PlayPing Studio on Google Play</h3>
+                    <p>Discover current updates, new level packs, and upcoming game launches.</p>
+                </div>
+                <a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                    View Google Play Catalog ↗
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills & Technologies Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title">Skills & Technologies</h2>
+                <p class="section__subtitle">Core competencies and engineering tools used to build performant 3D mobile titles</p>
+            </div>
+            <div class="skills__grid">
+                <div class="skill-card">
+                    <div class="skill-card__icon">🎮</div>
+                    <h3 class="skill-card__title">Game Engine & Core</h3>
+                    <p class="skill-card__desc">Building rich interactive worlds with performant gameplay loops.</p>
+                    <ul class="skill-card__list">
+                        <li>Unity (2D & 3D Gameplay)</li>
+                        <li>C# Gameplay Architecture</li>
+                        <li>Object-Oriented Design & State Machines</li>
+                        <li>Event-Driven Audio & Animation Systems</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card__icon">⚙️</div>
+                    <h3 class="skill-card__title">Physics & Mechanics</h3>
+                    <p class="skill-card__desc">Designing satisfying player controls and responsive real-time dynamics.</p>
+                    <ul class="skill-card__list">
+                        <li>3D Rigidbody & Kinematics</li>
+                        <li>Ball Tilting & Balance Physics</li>
+                        <li>Vehicle Suspension & Drift Dynamics</li>
+                        <li>Interactive Obstacles & Trap Systems</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card__icon">📱</div>
+                    <h3 class="skill-card__title">Mobile Optimization</h3>
+                    <p class="skill-card__desc">Ensuring consistent 60 FPS performance across wide device tiers.</p>
+                    <ul class="skill-card__list">
+                        <li>Draw Call & Batching Optimization</li>
+                        <li>Memory & Garbage Collection Management</li>
+                        <li>Multi-Resolution & Adaptive Quality Scaling</li>
+                        <li>Responsive Mobile Touch UI / Haptics</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card__icon">🚀</div>
+                    <h3 class="skill-card__title">Publishing & LiveOps</h3>
+                    <p class="skill-card__desc">End-to-end mobile game launch and monetization pipeline.</p>
+                    <ul class="skill-card__list">
+                        <li>Google Play Console & AAB Distribution</li>
+                        <li>Google AdMob Interstitial & Reward Ads</li>
+                        <li>Crashlytics & Performance Analytics</li>
+                        <li>Git Version Control & Repository Workflow</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -76,29 +181,33 @@
         <div class="container">
             <div class="about__content">
                 <div class="about__text">
-                    <h2 class="section__title">About Me</h2>
-                    <p class="about__description">I am passionate mobile game developer dedicated to creating engaging, high-quality gaming experiences for players worldwide.</p>
-                    <p class="about__mission">My mission is to craft innovative mobile games that entertain, challenge, and inspire players of all ages.</p>
+                    <h2 class="section__title">About Nilesh Kuril</h2>
+                    <p class="about__description">
+                        I am an indie mobile game developer and the creator behind <strong>PlayPing Studio</strong>. With a focused passion for physics-based puzzle games and accessible casual mechanics, I build titles that test players' dexterity and strategic thinking.
+                    </p>
+                    <p class="about__mission">
+                        My philosophy is simple: craft games with responsive controls, polished physics, and captivating level design that keep players coming back for one more try.
+                    </p>
                     <div class="about__features">
                         <div class="feature">
                             <div class="feature__icon">🎯</div>
                             <div class="feature__content">
-                                <h3>Quality First</h3>
-                                <p>Every game is crafted with attention to detail and player experience</p>
+                                <h3>Gameplay First</h3>
+                                <p>Fine-tuned controls and instant responsiveness targeting 60 frames per second.</p>
                             </div>
                         </div>
                         <div class="feature">
                             <div class="feature__icon">🌟</div>
                             <div class="feature__content">
-                                <h3>Innovation</h3>
-                                <p>I push boundaries to create unique and memorable gaming experiences</p>
+                                <h3>Creative Levels</h3>
+                                <p>From winding wooden bridges to complex 3D labyrinths with multiple vehicles.</p>
                             </div>
                         </div>
                         <div class="feature">
                             <div class="feature__icon">👥</div>
                             <div class="feature__content">
-                                <h3>Community</h3>
-                                <p>Building games that bring people together and create lasting memories</p>
+                                <h3>Player Centric</h3>
+                                <p>Offline play support, minimal interruptions, and continuous quality updates.</p>
                             </div>
                         </div>
                     </div>
@@ -112,61 +221,63 @@
         <div class="container">
             <div class="contact__content">
                 <h2 class="section__title">Get In Touch</h2>
-                <p class="contact__description">Ready to discuss your next gaming project or partnership?</p>
+                <p class="contact__description">Have feedback, business inquiries, or interested in collaborating on game development projects?</p>
                 <div class="contact__info">
                     <div class="contact__item">
-                        <span class="contact__label">Email:</span>
-                        <a href="mailto:hello@gamecraftstudios.com" class="contact__value">nileshkuril.nk@gmail.com</a>
+                        <span class="contact__label">Direct Email:</span>
+                        <a href="mailto:nileshkuril.nk@gmail.com" class="contact__value">nileshkuril.nk@gmail.com</a>
+                    </div>
+                    <div class="contact__item">
+                        <span class="contact__label">Studio Support:</span>
+                        <a href="mailto:PlayPingStudio@gmail.com" class="contact__value">PlayPingStudio@gmail.com</a>
                     </div>
                     <div class="contact__social">
-                        <a href="#" class="social__link" target="_blank">Twitter</a>
-                        <a href="#" class="social__link" target="_blank">Facebook</a>
-                        <a href="#" class="social__link" target="_blank">LinkedIn</a>
+                        <a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer" class="social__link">
+                            Google Play Developer Profile ↗
+                        </a>
+                        <a href="mailto:nileshkuril.nk@gmail.com" class="social__link">
+                            Send Email
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Unified Clean Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer__content">
                 <div class="footer__brand">
                     <h3>Nilesh Kuril Games</h3>
-                    <p>Crafting extraordinary mobile gaming experiences</p>
+                    <p>PlayPing Studio &bull; Crafting extraordinary mobile gaming experiences</p>
                 </div>
                 <div class="footer__links">
                     <div class="footer__section">
-                        <h4>Games</h4>
+                        <h4>Navigation</h4>
                         <ul>
+                            <li><a href="#home">Home</a></li>
                             <li><a href="#games">Featured Games</a></li>
-                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#skills">Skills</a></li>
+                            <li><a href="#about">About</a></li>
                             <li><a href="#contact">Contact</a></li>
                         </ul>
                     </div>
                     <div class="footer__section">
-                        <h4>Connect</h4>
+                        <h4>Connect & Legal</h4>
                         <ul>
-                            <li><a href="#" target="_blank">Twitter</a></li>
-                            <li><a href="#" target="_blank">Facebook</a></li>
-                            <li><a href="#" target="_blank">LinkedIn</a></li>
-                           
+                            <li><a href="https://play.google.com/store/apps/dev?id=6525666759863336419" target="_blank" rel="noopener noreferrer">Play Store Developer Page ↗</a></li>
+                            <li><a href="mailto:nileshkuril.nk@gmail.com">Contact Developer</a></li>
+                            <li><a href="privacy-policy.html">Privacy Policy</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="footer__bottom">
-                <p>&copy; 2025 Nilesh Kuril Games. All rights reserved.</p>
+                <p>&copy; 2026 Nilesh Kuril Games &bull; PlayPing Studio. All rights reserved. | <a href="privacy-policy.html">Privacy Policy</a></p>
             </div>
         </div>
     </footer>
-
-<div class="footer__bottom">
-  <p>&copy; 2025 Nilesh Kuril Games. All rights reserved. | 
-     <a href="privacy-policy.html">Privacy Policy</a>
-  </p>
-</div>
     
     <!-- Game Modal -->
     <div id="gameModal" class="modal hidden">
