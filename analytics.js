@@ -15,6 +15,11 @@
   const DEFAULT_PIN_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
 
   function getDeviceType() {
+    // 1. Check modern User-Agent Client Hints
+    if (navigator.userAgentData && typeof navigator.userAgentData.mobile === "boolean") {
+      if (navigator.userAgentData.mobile) return "Mobile";
+    }
+
     const ua = navigator.userAgent;
     if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
       return "Tablet";
@@ -22,6 +27,12 @@
     if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i.test(ua)) {
       return "Mobile";
     }
+
+    // Touch device heuristic with mobile screen width
+    if (navigator.maxTouchPoints && navigator.maxTouchPoints > 1 && window.innerWidth <= 820) {
+      return "Mobile";
+    }
+
     return "Desktop";
   }
 
@@ -35,12 +46,21 @@
   }
 
   function getOS() {
+    if (navigator.userAgentData && navigator.userAgentData.platform) {
+      const plat = navigator.userAgentData.platform.toLowerCase();
+      if (plat.includes("android")) return "Android";
+      if (plat.includes("windows")) return "Windows";
+      if (plat.includes("ios") || plat.includes("iphone") || plat.includes("ipad")) return "iOS";
+      if (plat.includes("mac")) return "macOS";
+      if (plat.includes("linux")) return "Linux";
+    }
+
     const ua = navigator.userAgent;
-    if (ua.includes("Android")) return "Android";
-    if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS";
-    if (ua.includes("Windows")) return "Windows";
-    if (ua.includes("Mac OS")) return "macOS";
-    if (ua.includes("Linux")) return "Linux";
+    if (/Android/i.test(ua)) return "Android";
+    if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+    if (/Windows/i.test(ua)) return "Windows";
+    if (/Mac OS|Macintosh/i.test(ua)) return "macOS";
+    if (/Linux/i.test(ua)) return "Linux";
     return "Unknown";
   }
 
@@ -51,21 +71,25 @@
       if (cached) return cached;
     } catch (e) {}
 
+    const isMobile = getDeviceType() === "Mobile";
     const ua = navigator.userAgent;
+
     // Android device model extraction from UA string (e.g., "; SM-S918B Build/" or "; Pixel 7 Pro Build/" or "; M2101K6G Build/")
     if (/Android/i.test(ua)) {
       const match = ua.match(/;\s*([^;)]+?)\s+Build\//i);
       if (match && match[1]) {
         const candidate = match[1].trim();
-        // Ignore generic words like 'Linux' or 'Android' or 'wv'
         if (!/^(Linux|Android|wv|K)$/i.test(candidate)) {
           return candidate;
         }
       }
+      return "Android Phone";
     } else if (/iPhone/i.test(ua)) {
       return "iPhone";
     } else if (/iPad/i.test(ua)) {
       return "iPad";
+    } else if (isMobile) {
+      return "Smartphone";
     } else if (/Macintosh/i.test(ua)) {
       return "Mac";
     } else if (/Windows/i.test(ua)) {
