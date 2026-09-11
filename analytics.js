@@ -267,10 +267,11 @@
     } catch (e) {}
   }
 
-  // Push event to Google Analytics 4 if gtag is available
+  // Push event to Google Analytics 4 if gtag is available with beacon transport
   function sendToGA(eventName, params) {
     if (typeof window.gtag === "function") {
-      window.gtag("event", eventName, params);
+      const p = Object.assign({ transport_type: "beacon" }, params || {});
+      window.gtag("event", eventName, p);
     }
   }
 

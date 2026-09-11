@@ -139,13 +139,24 @@
         const targetUrl = "https://play.google.com/store/apps/details?id=com.playpingstudio.mazeandcar&hl=en_IN&referrer=utm_source%3Dsmart_link%26utm_medium%3Dredirect_page%26utm_campaign%3Dmaze_promo";
         const gameTitle = "Maze and Car : A Puzzle Game";
 
-        // Track both page visit and outbound store conversion
+        // Track the play store intent immediately
+        function recordAndGo(url) {
+            if (window.StudioAnalytics) {
+                window.StudioAnalytics.trackGameClick(gameTitle, url || targetUrl);
+            }
+        }
+
+        // Attach click handlers to buttons for immediate tracking
+        document.getElementById("directLink").addEventListener("click", function(e) {
+            recordAndGo(this.href);
+        });
+
+        // Record store click when loaded
         if (window.StudioAnalytics) {
-            window.StudioAnalytics.trackPageView();
             window.StudioAnalytics.trackGameClick(gameTitle, targetUrl);
         }
 
-        // Automatic seamless redirect after 1.2s
+        // Seamless redirect after 1.2s
         setTimeout(function() {
             window.location.replace(targetUrl);
         }, 1200);
