@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to Imbalance: Ball Balancing Game...</title>
+    <meta name="description" content="Play Imbalance: Ball Balancing Game on Google Play. Created by PlayPing Studio.">
+    <meta property="og:title" content="Imbalance: Ball Balancing Game - PlayPing Studio">
+    <meta property="og:description" content="Challenging 3D balance physics game. Available on Google Play Store.">
+    <meta property="og:image" content="images/handle-ball-screen-1.png">
+    <link rel="icon" type="image/png" href="images/handle-the-ball.png">
+    
+    <!-- Google Analytics 4 (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-152BQQBX20"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-152BQQBX20');
+    </script>
+    <script src="analytics.js"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #0f172a 0%, #060910 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .redirect-card {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 24px;
+            padding: 36px 28px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.2);
+        }
+        .game-icon {
+            width: 96px;
+            height: 96px;
+            border-radius: 22px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+        h1 {
+            font-size: 22px;
+            margin: 0 0 8px 0;
+            color: #fff;
+        }
+        .studio-tag {
+            color: #38bdf8;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .desc {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #34d399);
+            width: 0%;
+            animation: fillProgress 1.2s ease forwards;
+        }
+        @keyframes fillProgress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        .play-store-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 20px;
+            background: #38bdf8;
+            color: #080c14;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            transition: transform 0.2s ease;
+        }
+        .play-store-btn:hover {
+            transform: translateY(-2px);
+        }
+        .manual-link {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 18px;
+        }
+        .manual-link a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-card">
+        <img src="images/handle-the-ball.png" alt="Imbalance" class="game-icon">
+        <h1>Imbalance: Ball Balancing Game</h1>
+        <div class="studio-tag">PlayPing Studio • 4.6 ★ (50K+ Downloads)</div>
+        <p class="desc">Taking you to the official Google Play Store listing...</p>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <a id="directLink" href="https://play.google.com/store/apps/details?id=com.PlayPingStudio.HandleTheBall&hl=en_IN" class="play-store-btn">
+            ▶ Continue to Google Play
+        </a>
+        <div class="manual-link">
+            Not redirected? <a href="https://play.google.com/store/apps/details?id=com.PlayPingStudio.HandleTheBall&hl=en_IN">Click here</a> or <a href="index.html">Visit Portfolio</a>
+        </div>
+    </div>
+
+    <script>
+        const targetUrl = "https://play.google.com/store/apps/details?id=com.PlayPingStudio.HandleTheBall&hl=en_IN";
+        const gameTitle = "Imbalance: Ball Balancing Game";
+
+        // Track both page visit and outbound store conversion
+        if (window.StudioAnalytics) {
+            window.StudioAnalytics.trackPageView();
+            window.StudioAnalytics.trackGameClick(gameTitle, targetUrl);
+        }
+
+        // Automatic seamless redirect after 1.2s (gives time for analytics beacon & branding)
+        setTimeout(function() {
+            window.location.replace(targetUrl);
+        }, 1200);
+    </script>
+</body>
+</html>

@@ -63,6 +63,26 @@ function initializeApp() {
     setupNavigation();
     setupModal();
     setupSmoothScrolling();
+    handleDirectGameParam();
+}
+
+// Support links like nileshkuril.in/?play=imbalance
+function handleDirectGameParam() {
+    const params = new URLSearchParams(window.location.search);
+    const playParam = params.get('play') || params.get('game');
+    if (!playParam) return;
+
+    const game = gamesData.games.find(g => 
+        g.title.toLowerCase().includes(playParam.toLowerCase())
+    );
+
+    if (game) {
+        if (window.StudioAnalytics) {
+            window.StudioAnalytics.trackGameClick(game.title, game.playStoreUrl);
+        }
+        // Auto open game details or redirect
+        openGameModal(game);
+    }
 }
 
 // Render games to the grid
