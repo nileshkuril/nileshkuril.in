@@ -950,7 +950,10 @@
 
                 const flag = ev.flag || "📍";
                 const cityStr = ev.city ? `${flag} ${ev.city}, ${ev.country}` : "Global / Detecting";
-                const deviceStr = (ev.device || "Mobile") + " (" + (ev.os || "Android") + ")";
+                let deviceStr = (ev.device || "Mobile") + " (" + (ev.os || "Android") + ")";
+                if (ev.deviceModel) {
+                    deviceStr = `<span style="color: #38bdf8; font-weight: 500;">${escapeHtml(ev.deviceModel)}</span> <span style="color: #64748b; font-size: 11px;">(${ev.os || ev.device})</span>`;
+                }
                 const sourceStr = ev.referrer || "Direct";
                 const timeAgo = formatTimeAgo(new Date(ev.timestamp));
 
@@ -959,7 +962,7 @@
                         <td>${tag}</td>
                         <td style="font-weight: 500;">${context}</td>
                         <td style="color: #e2e8f0; font-size: 12px;">${cityStr}</td>
-                        <td style="color: #94a3b8; font-size: 12px;">${deviceStr}</td>
+                        <td style="font-size: 12px;">${deviceStr}</td>
                         <td style="color: #a855f7; font-size: 12px; font-weight: 500;">${sourceStr}</td>
                         <td style="color: #64748b; font-size: 12px;">${timeAgo}</td>
                     </tr>
@@ -976,6 +979,19 @@
             if (hours < 24) return hours + "h ago";
             const days = Math.floor(hours / 24);
             return days + "d ago";
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str).replace(/[&<>"']/g, function (m) {
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                }[m];
+            });
         }
     </script>
 </body>

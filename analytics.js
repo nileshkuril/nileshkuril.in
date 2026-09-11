@@ -44,6 +44,67 @@
     return "Unknown";
   }
 
+  // Quick synchronous model parser from User-Agent or cached Client Hints
+  function getDeviceModelSync() {
+    try {
+      const cached = sessionStorage.getItem("studio_device_model");
+      if (cached) return cached;
+    } catch (e) {}
+
+    const ua = navigator.userAgent;
+    // Android device model extraction from UA string (e.g., "; SM-S918B Build/" or "; Pixel 7 Pro Build/" or "; M2101K6G Build/")
+    if (/Android/i.test(ua)) {
+      const match = ua.match(/;\s*([^;)]+?)\s+Build\//i);
+      if (match && match[1]) {
+        const candidate = match[1].trim();
+        // Ignore generic words like 'Linux' or 'Android' or 'wv'
+        if (!/^(Linux|Android|wv|K)$/i.test(candidate)) {
+          return candidate;
+        }
+      }
+    } else if (/iPhone/i.test(ua)) {
+      return "iPhone";
+    } else if (/iPad/i.test(ua)) {
+      return "iPad";
+    } else if (/Macintosh/i.test(ua)) {
+      return "Mac";
+    } else if (/Windows/i.test(ua)) {
+      return "PC";
+    }
+    return "";
+  }
+
+  // Asynchronous Client Hints API (supported on Chrome, Edge, Samsung Internet, Opera on Mobile)
+  function fetchDeviceModelAsync(callback) {
+    try {
+      const cached = sessionStorage.getItem("studio_device_model");
+      if (cached) {
+        callback(cached);
+        return;
+      }
+    } catch (e) {}
+
+    if (navigator.userAgentData && typeof navigator.userAgentData.getHighEntropyValues === "function") {
+      navigator.userAgentData.getHighEntropyValues(["model", "platformVersion"])
+        .then(ua => {
+          let model = ua.model ? ua.model.trim() : "";
+          if (model && model !== "K") {
+            try {
+              sessionStorage.setItem("studio_device_model", model);
+            } catch (e) {}
+            callback(model);
+          } else {
+            callback(getDeviceModelSync());
+          }
+        })
+        .catch(() => {
+          callback(getDeviceModelSync());
+        });
+    } else {
+      callback(getDeviceModelSync());
+    }
+  }
+
   function getCleanReferrer() {
     const ref = document.referrer;
     if (!ref) return "Direct";
@@ -192,6 +253,20 @@
     } catch (e) {}
   }
 
+  function updateEventModel(eventId, model) {
+    if (!model) return;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY_EVENTS);
+      if (!raw) return;
+      const events = JSON.parse(raw);
+      const ev = events.find(e => e.id === eventId);
+      if (ev) {
+        ev.deviceModel = model;
+        localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(events));
+      }
+    } catch (e) {}
+  }
+
   // Push event to Google Analytics 4 if gtag is available
   function sendToGA(eventName, params) {
     if (typeof window.gtag === "function") {
@@ -204,6 +279,7 @@
       const eventId = "pv_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6);
       const initialGeo = getCachedGeo();
       const referrer = getCleanReferrer();
+      const initialModel = getDeviceModelSync();
 
       const event = {
         id: eventId,
@@ -211,6 +287,7 @@
         path: window.location.pathname,
         visitorId: getVisitorId(),
         device: getDeviceType(),
+        deviceModel: initialModel,
         browser: getBrowserName(),
         os: getOS(),
         referrer: referrer,
@@ -224,25 +301,37 @@
         page_title: document.title,
         page_location: window.location.href,
         device_type: event.device,
+        device_model: initialModel || event.device,
         traffic_source: referrer
       });
 
+      // Async Geo resolution
       if (initialGeo.city === "Detecting...") {
         fetchVisitorGeo(function (geo) {
           updateEventGeo(eventId, geo);
         });
       }
+
+      // Async Client Hints Device Model resolution
+      fetchDeviceModelAsync(function (model) {
+        if (model && model !== initialModel) {
+          updateEventModel(eventId, model);
+        }
+      });
     },
 
     trackGameClick: function (gameTitle, url) {
       const geo = getCachedGeo();
+      const model = getDeviceModelSync();
+      const eventId = "click_" + Date.now();
       const event = {
-        id: "click_" + Date.now(),
+        id: eventId,
         type: "play_store_click",
         game: gameTitle,
         url: url,
         visitorId: getVisitorId(),
         device: getDeviceType(),
+        deviceModel: model,
         browser: getBrowserName(),
         os: getOS(),
         city: geo.city,
@@ -255,18 +344,28 @@
       sendToGA("game_download_click", {
         game_title: gameTitle,
         store_url: url,
-        device_type: event.device
+        device_type: event.device,
+        device_model: model || event.device
+      });
+
+      fetchDeviceModelAsync(function (resolvedModel) {
+        if (resolvedModel && resolvedModel !== model) {
+          updateEventModel(eventId, resolvedModel);
+        }
       });
     },
 
     trackModalView: function (gameTitle) {
       const geo = getCachedGeo();
+      const model = getDeviceModelSync();
+      const eventId = "modal_" + Date.now();
       const event = {
-        id: "modal_" + Date.now(),
+        id: eventId,
         type: "game_modal_view",
         game: gameTitle,
         visitorId: getVisitorId(),
         device: getDeviceType(),
+        deviceModel: model,
         browser: getBrowserName(),
         os: getOS(),
         city: geo.city,
@@ -277,17 +376,27 @@
       };
       recordLocalEvent(event);
       sendToGA("view_game_details", {
-        game_title: gameTitle
+        game_title: gameTitle,
+        device_model: model || event.device
+      });
+
+      fetchDeviceModelAsync(function (resolvedModel) {
+        if (resolvedModel && resolvedModel !== model) {
+          updateEventModel(eventId, resolvedModel);
+        }
       });
     },
 
     trackDevClick: function () {
       const geo = getCachedGeo();
+      const model = getDeviceModelSync();
+      const eventId = "dev_" + Date.now();
       const event = {
-        id: "dev_" + Date.now(),
+        id: eventId,
         type: "dev_catalog_click",
         visitorId: getVisitorId(),
         device: getDeviceType(),
+        deviceModel: model,
         browser: getBrowserName(),
         os: getOS(),
         city: geo.city,
@@ -298,7 +407,14 @@
       };
       recordLocalEvent(event);
       sendToGA("view_developer_catalog", {
-        developer: "PlayPing Studio"
+        developer: "PlayPing Studio",
+        device_model: model || event.device
+      });
+
+      fetchDeviceModelAsync(function (resolvedModel) {
+        if (resolvedModel && resolvedModel !== model) {
+          updateEventModel(eventId, resolvedModel);
+        }
       });
     },
 
