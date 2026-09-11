@@ -9,6 +9,7 @@
   const STORAGE_KEY_AGG = "studio_analytics_aggregated";
   const STORAGE_KEY_GA = "studio_ga_id";
   const STORAGE_KEY_PIN = "studio_admin_pin_hash";
+  const STORAGE_KEY_GEO = "studio_visitor_geo";
 
   // Default SHA-256 for PIN "2026"
   const DEFAULT_PIN_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
@@ -43,6 +44,65 @@
     return "Unknown";
   }
 
+  function getCleanReferrer() {
+    const ref = document.referrer;
+    if (!ref) return "Direct";
+    try {
+      const url = new URL(ref);
+      const host = url.hostname.toLowerCase();
+      if (host.includes("nileshkuril.in") || host.includes("localhost")) return "Direct";
+      if (host.includes("google.")) return "Google Search";
+      if (host.includes("linkedin.com")) return "LinkedIn";
+      if (host.includes("instagram.com")) return "Instagram";
+      if (host.includes("reddit.com")) return "Reddit";
+      if (host.includes("youtube.com")) return "YouTube";
+      if (host.includes("twitter.com") || host.includes("t.co") || host.includes("x.com")) return "X / Twitter";
+      if (host.includes("github.com")) return "GitHub";
+      return host.replace(/^www\./, "");
+    } catch (e) {
+      return "External";
+    }
+  }
+
+  function getCachedGeo() {
+    try {
+      const cached = sessionStorage.getItem(STORAGE_KEY_GEO);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return {
+      city: "Detecting...",
+      country: "Global",
+      flag: "📍"
+    };
+  }
+
+  function fetchVisitorGeo(callback) {
+    try {
+      const cached = sessionStorage.getItem(STORAGE_KEY_GEO);
+      if (cached) {
+        callback(JSON.parse(cached));
+        return;
+      }
+    } catch (e) {}
+
+    fetch("https://ipwho.is/")
+      .then(res => res.json())
+      .then(data => {
+        const geo = {
+          city: data.city || "Unknown City",
+          country: data.country || "Global",
+          flag: (data.flag && data.flag.emoji) ? data.flag.emoji : "📍"
+        };
+        try {
+          sessionStorage.setItem(STORAGE_KEY_GEO, JSON.stringify(geo));
+        } catch (e) {}
+        callback(geo);
+      })
+      .catch(() => {
+        callback({ city: "Undetected", country: "Global", flag: "🌐" });
+      });
+  }
+
   function getVisitorId() {
     let id = localStorage.getItem("studio_visitor_id");
     if (!id) {
@@ -70,8 +130,13 @@
         gameModals: {},
         devClicks: 0,
         deviceCounts: { Mobile: 0, Desktop: 0, Tablet: 0 },
+        cityCounts: {},
+        sourceCounts: {},
         dailyViews: {}
       };
+
+      if (!agg.cityCounts) agg.cityCounts = {};
+      if (!agg.sourceCounts) agg.sourceCounts = {};
 
       const dateKey = new Date(event.timestamp).toISOString().split("T")[0];
 
@@ -80,6 +145,15 @@
         agg.dailyViews[dateKey] = (agg.dailyViews[dateKey] || 0) + 1;
         agg.uniqueVisitors[event.visitorId] = true;
         agg.deviceCounts[event.device] = (agg.deviceCounts[event.device] || 0) + 1;
+
+        if (event.city && event.city !== "Detecting...") {
+          const locKey = `${event.city}, ${event.country}`;
+          agg.cityCounts[locKey] = (agg.cityCounts[locKey] || 0) + 1;
+        }
+
+        if (event.referrer) {
+          agg.sourceCounts[event.referrer] = (agg.sourceCounts[event.referrer] || 0) + 1;
+        }
       } else if (event.type === "play_store_click") {
         agg.gameClicks[event.game] = (agg.gameClicks[event.game] || 0) + 1;
       } else if (event.type === "game_modal_view") {
@@ -94,6 +168,30 @@
     }
   }
 
+  function updateEventGeo(eventId, geo) {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY_EVENTS);
+      if (!raw) return;
+      const events = JSON.parse(raw);
+      const ev = events.find(e => e.id === eventId);
+      if (ev) {
+        ev.city = geo.city;
+        ev.country = geo.country;
+        ev.flag = geo.flag;
+        localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(events));
+      }
+
+      const rawAgg = localStorage.getItem(STORAGE_KEY_AGG);
+      if (rawAgg) {
+        const agg = JSON.parse(rawAgg);
+        if (!agg.cityCounts) agg.cityCounts = {};
+        const locKey = `${geo.city}, ${geo.country}`;
+        agg.cityCounts[locKey] = (agg.cityCounts[locKey] || 0) + 1;
+        localStorage.setItem(STORAGE_KEY_AGG, JSON.stringify(agg));
+      }
+    } catch (e) {}
+  }
+
   // Push event to Google Analytics 4 if gtag is available
   function sendToGA(eventName, params) {
     if (typeof window.gtag === "function") {
@@ -103,26 +201,43 @@
 
   const StudioAnalytics = {
     trackPageView: function () {
+      const eventId = "pv_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6);
+      const initialGeo = getCachedGeo();
+      const referrer = getCleanReferrer();
+
       const event = {
+        id: eventId,
         type: "page_view",
         path: window.location.pathname,
         visitorId: getVisitorId(),
         device: getDeviceType(),
         browser: getBrowserName(),
         os: getOS(),
-        referrer: document.referrer || "Direct",
+        referrer: referrer,
+        city: initialGeo.city,
+        country: initialGeo.country,
+        flag: initialGeo.flag,
         timestamp: new Date().toISOString()
       };
       recordLocalEvent(event);
       sendToGA("page_view", {
         page_title: document.title,
         page_location: window.location.href,
-        device_type: event.device
+        device_type: event.device,
+        traffic_source: referrer
       });
+
+      if (initialGeo.city === "Detecting...") {
+        fetchVisitorGeo(function (geo) {
+          updateEventGeo(eventId, geo);
+        });
+      }
     },
 
     trackGameClick: function (gameTitle, url) {
+      const geo = getCachedGeo();
       const event = {
+        id: "click_" + Date.now(),
         type: "play_store_click",
         game: gameTitle,
         url: url,
@@ -130,6 +245,10 @@
         device: getDeviceType(),
         browser: getBrowserName(),
         os: getOS(),
+        city: geo.city,
+        country: geo.country,
+        flag: geo.flag,
+        referrer: getCleanReferrer(),
         timestamp: new Date().toISOString()
       };
       recordLocalEvent(event);
@@ -141,11 +260,19 @@
     },
 
     trackModalView: function (gameTitle) {
+      const geo = getCachedGeo();
       const event = {
+        id: "modal_" + Date.now(),
         type: "game_modal_view",
         game: gameTitle,
         visitorId: getVisitorId(),
         device: getDeviceType(),
+        browser: getBrowserName(),
+        os: getOS(),
+        city: geo.city,
+        country: geo.country,
+        flag: geo.flag,
+        referrer: getCleanReferrer(),
         timestamp: new Date().toISOString()
       };
       recordLocalEvent(event);
@@ -155,10 +282,18 @@
     },
 
     trackDevClick: function () {
+      const geo = getCachedGeo();
       const event = {
+        id: "dev_" + Date.now(),
         type: "dev_catalog_click",
         visitorId: getVisitorId(),
         device: getDeviceType(),
+        browser: getBrowserName(),
+        os: getOS(),
+        city: geo.city,
+        country: geo.country,
+        flag: geo.flag,
+        referrer: getCleanReferrer(),
         timestamp: new Date().toISOString()
       };
       recordLocalEvent(event);
@@ -202,6 +337,8 @@
           },
           devClicks: 0,
           deviceCounts: { Mobile: 0, Desktop: 0, Tablet: 0 },
+          cityCounts: {},
+          sourceCounts: {},
           dailyViews: {}
         };
         agg.dailyViews[today] = 0;
