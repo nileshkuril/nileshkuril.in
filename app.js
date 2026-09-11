@@ -166,17 +166,28 @@ function createGameCard(game, index) {
         openGameModal(game);
     });
     
-    // Card click handler (excluding buttons)
+    // Screenshot strip click handler (open gallery modal)
+    const screenItems = card.querySelectorAll('.card-screen-item');
+    screenItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (window.StudioAnalytics) {
+                window.StudioAnalytics.trackModalView(game.title);
+            }
+            openGameModal(game);
+        });
+    });
+
+    // Card click handler (excluding buttons and screenshot strips)
     card.addEventListener('click', function(e) {
-        // Only open modal if click is not on a button
-        if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
+        if (!e.target.classList.contains('btn') && !e.target.closest('.btn') && !e.target.closest('.game-card__screenshots-strip')) {
             if (window.StudioAnalytics) {
                 window.StudioAnalytics.trackModalView(game.title);
             }
             openGameModal(game);
         }
     });
-    
+
     return card;
 }
 
